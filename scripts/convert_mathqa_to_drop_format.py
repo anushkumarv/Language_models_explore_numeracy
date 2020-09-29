@@ -46,7 +46,7 @@ class MathQaToDrop(object):
             math_data = json.load(f)
         for item in math_data:
             ans = self.extract_answer(item)
-            self.math_datapoints_list.append((math_data['Problem'],ans))
+            self.math_datapoints_list.append((item['Problem'],ans))
 
     def extract_answer(self, datapoint):
         '''
