@@ -2,6 +2,7 @@ import json
 import re
 import os 
 
+
 class MathQaToDrop(object):
     def __init__(self, math_dataset_json_file_path,  math_dataset_json_file_name):
         self.math_dataset_json_file_path = math_dataset_json_file_path
@@ -39,17 +40,25 @@ class MathQaToDrop(object):
         self.drop_format_dict = {'random_topic':{'passage':'','qa_pairs':self.drop_format_qa_pairs_list}}
 
     def parse_mathqa_file(self):
-        '''
+        """
         Reads mathqa dataset json file and extracts the datapoints in the form of [(q1,a1), (q2,a2), ..., (qn,an)]
-        '''
+        """
         with open(os.path.join(self.math_dataset_json_file_path, self.math_dataset_json_file_name)) as f:
             math_data = json.load(f)
         for item in math_data:
-            ans = self.extract_answer(item)
-            self.math_datapoints_list.append((item['Problem'],ans))
+            try:
+                ans = self.extract_answer(item)
+                self.math_datapoints_list.append((item['Problem'], ans))
+            except SyntaxError as se:
+                # This takes care of cases where answer is a ratio. For ex: 1:5. I am eliminating those datapoints
+                print(se)
+                continue
+            except Exception as e:
+                print(e)
+                continue
 
     def extract_answer(self, datapoint):
-        '''
+        """
         extract answer from one datapoint in mathqa dataset file
         input - {
                     "Problem": "a multiple choice test consists of 4 questions , and each question has 5 answer choices . in how many r ways can the test be completed if every question is unanswered ?",
@@ -61,14 +70,19 @@ class MathQaToDrop(object):
                     "category": "general"
                 }
         output - 625   # value of the correct option
-        '''
+        """
         options = datapoint['options'].split(',')
         correct_option = datapoint['correct']
+        # Extract the correct option
         answer = re.sub(r'[a-z][ ][)]', '', options[self.options_key_map[correct_option]]).strip()
+        # Remove unwanted characters from the answer. For ex:  58 % -> 58, rs. 50 -> 50
+        answer = answer[re.search('[-0-9]', answer).start():len(answer) - re.search('[0-9]', answer[::-1]).start()]
+        # Evaluate the answer. For ex: 15/3 -> 5.0
+        answer = eval(answer)
         return answer
 
     def convert_math_data_to_drop_format(self):
-        '''
+        """
         convert the extract question and answer pairs from math qa dataset into the format of drop dataset
         input - [(q1,a1), (q2,a2), ..., (qn,an)]
         output - { "random_id": {
@@ -92,7 +106,7 @@ class MathQaToDrop(object):
                 }, ... 
                 ]
             }    
-        '''
+        """
         for item in self.math_datapoints_list:
             drop_datapoint = json.loads(self.drop_qa_component_template)
             drop_datapoint['question'] = item[0]
