@@ -48,7 +48,7 @@ class MathQaToDrop(object):
         for item in math_data:
             try:
                 ans = self.extract_answer(item)
-                self.math_datapoints_list.append((item['Problem'], ans))
+                self.math_datapoints_list.append((item['Problem'], str(ans)))
             except SyntaxError as se:
                 # This takes care of cases where answer is a ratio. For ex: 1:5. I am eliminating those datapoints
                 print(se)
