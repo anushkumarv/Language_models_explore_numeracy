@@ -29,12 +29,12 @@ class MathQaNmt(object):
 
     def __write_data(self):
         # write src data
-        print('##### Writing src file at ', os.path.join(self.filepath, self.filename, '_src.txt'))
-        with open(os.path.join(self.filepath, self.filename, '_src.txt'), 'w') as f:
+        print('##### Writing src file at ', os.path.join(self.filepath, self.filename + '_src.txt'))
+        with open(os.path.join(self.filepath, self.filename + '_src.txt'), 'w', encoding='utf8') as f:
             for item in self.src:
                 f.write("%s\n" % item)
-        print('##### Writing tgt file at ', os.path.join(self.filepath, self.filename, '_tgt.txt'))
-        with open(os.path.join(self.filepath, self.filename, '_tgt.txt'), 'w') as f:
+        print('##### Writing tgt file at ', os.path.join(self.filepath, self.filename + '_tgt.txt'))
+        with open(os.path.join(self.filepath, self.filename + '_tgt.txt'), 'w', encoding='utf8') as f:
             for item in self.tgt:
                 f.write("%s\n" % item)
 
