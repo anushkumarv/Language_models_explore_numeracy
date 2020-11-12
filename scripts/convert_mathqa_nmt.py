@@ -1,6 +1,7 @@
 import json
 import os
 import argparse
+import re
 
 
 class MathQaNmt(object):
@@ -25,7 +26,12 @@ class MathQaNmt(object):
         """
         for item in self.math_data:
             self.src.append(item['Problem'])
-            self.tgt.append(item['linear_formula'])
+            tgt_sent = item['linear_formula']
+            tgt_sent = re.sub(r'\)\|', ' ', tgt_sent)
+            tgt_sent = re.sub(r'\(', ' ', tgt_sent)
+            tgt_sent = re.sub(r'\)', ' ', tgt_sent)
+            tgt_sent = re.sub(r',', ' ', tgt_sent)
+            self.tgt.append(tgt_sent.strip())
 
     def __write_data(self):
         # write src data

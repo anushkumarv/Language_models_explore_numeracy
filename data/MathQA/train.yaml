@@ -1,0 +1,21 @@
+data: mathqanmt
+# Vocabulary files that were just created
+src_vocab: mathqanmt.vocab.src
+tgt_vocab: mathqanmt.vocab.tgt
+
+# Train on a single GPU
+world_size: 1
+gpu_ranks: [0]
+
+# Where to save the checkpoints
+save_model: mathQaNmtLstmModel
+save_checkpoint_steps: 500
+train_steps: 1000
+valid_steps: 500
+
+rnn_type: LSTM
+learning_rate: 0.001
+src_word_vec_size: 100
+tgt_word_vec_size: 100
+rnn_size: 100
+layers: 2
