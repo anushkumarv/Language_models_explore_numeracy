@@ -37,13 +37,19 @@ def process_tgt(tgt_lst, num_in_q):
         op = tgt_lst[i]
         # Check if the instruction we are trying to change is a function or an argument and handle accordingly
         if op in operations:
+            # Replace it by a random operation/ function from the supported operations list
+            # TODO : check if the number of arguments to the operation/function is the same
             tgt_lst[i] = random.sample(operations, 1)
         elif op[0] == '#':
+            # Check how many operation functions preceeded the argument to determine to which number can it perturbed
+            # add(n0,const_1)|add(#0,const_1)|add(#0,#1)|
             n_op_bfr = len([tgt_lst[j] for j in range(i) if tgt_lst[j] in operations]) - 1
             tgt_lst[i] = '#' + str(random.randint(0, n_op_bfr))
         elif len(op) == 2 and op[0] == 'n':
+            # The number argument replaced must be available within the question
             tgt_lst[i] = 'n' + str(random.randint(0, len(num_in_q) - 1))
         elif op.startswith('const_'):
+            # Replace it by a random constant number from the supported list
             tgt_lst[i] = random.sample(contants, 1)
         else:
             continue
