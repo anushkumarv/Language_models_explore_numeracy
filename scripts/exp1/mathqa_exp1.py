@@ -1,3 +1,7 @@
+import sys
+sys.path.append('./../')
+sys.path.append('./../evaluate_mathqa')
+
 import argparse
 import json
 from tqdm import tqdm
@@ -39,7 +43,7 @@ def process_tgt(tgt_lst, num_in_q):
         if op in operations:
             # Replace it by a random operation/ function from the supported operations list
             # TODO : check if the number of arguments to the operation/function is the same
-            tgt_lst[i] = random.sample(operations, 1)
+            tgt_lst[i] = random.sample(operations, 1)[0]
         elif op[0] == '#':
             # Check how many operation functions preceeded the argument to determine to which number can it perturbed
             # add(n0,const_1)|add(#0,const_1)|add(#0,#1)|
@@ -50,7 +54,7 @@ def process_tgt(tgt_lst, num_in_q):
             tgt_lst[i] = 'n' + str(random.randint(0, len(num_in_q) - 1))
         elif op.startswith('const_'):
             # Replace it by a random constant number from the supported list
-            tgt_lst[i] = random.sample(contants, 1)
+            tgt_lst[i] = random.sample(contants, 1)[0]
         else:
             continue
     return tgt_lst
@@ -83,11 +87,11 @@ def create_pairs(data_points_lst, rate_of_corruption):
 def write_data(src, tgt, args):
     if not os.path.exists(args.tgt_data_root_dir):
         os.mkdir(args.tgt_data_root_dir)
-    file_src = os.path.join(args.tgt_data_root_dir, args.prefix + '_src.txt')
+    file_src = os.path.join(args.tgt_data_root_dir, args.prefix + '_' + str(args.rate_of_corruption) +'_src.txt')
     with open(file_src, 'w') as f:
         for line in src:
             f.write("%s\n" % line)
-    file_tgt = os.path.join(args.tgt_data_root_dir, args.prefix + '_tgt.txt')
+    file_tgt = os.path.join(args.tgt_data_root_dir, args.prefix + '_' + str(args.rate_of_corruption) + '_tgt.txt')
     with open(file_tgt, 'w') as f:
         for line in tgt:
             f.write("%s\n" % line)
