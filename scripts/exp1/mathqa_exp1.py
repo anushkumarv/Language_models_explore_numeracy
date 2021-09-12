@@ -56,10 +56,9 @@ def process_tgt(tgt_lst, num_in_q):
     return tgt_lst
 
 
-def process_datapoint(data_point):
+def process_datapoint(data_point, rate_of_corruption):
     new_src, new_tgt = list(), list()
-    num_pairs = random.randint(1, 5)
-    for _ in range(num_pairs):
+    for _ in range(rate_of_corruption):
         src = data_point['Problem']
         tgt = data_point['linear_formula'].replace(')|', ' ').replace('(', ' ').replace(',',' ').\
             replace(')', ' ').strip()
@@ -71,11 +70,11 @@ def process_datapoint(data_point):
     return new_src, new_tgt
 
 
-def create_pairs(data_points_lst):
+def create_pairs(data_points_lst, rate_of_corruption):
     src = list()
     tgt = list()
     for item in tqdm(data_points_lst):
-        new_src, new_tgt = process_datapoint(item)
+        new_src, new_tgt = process_datapoint(item, rate_of_corruption)
         src.extend(new_src)
         tgt.extend(new_tgt)
     return src, tgt
@@ -98,7 +97,7 @@ def main(args):
     print('## Reading data ##')
     data_points_lst = read_src_data(os.path.join(args.src_data_root_dir, args.src_json))
     print('## Processing data ##')
-    src, tgt = create_pairs(data_points_lst)
+    src, tgt = create_pairs(data_points_lst, args.rate_of_corruption)
     print('## Writing data ##')
     write_data(src, tgt, args)
     print('## Completed')
@@ -110,5 +109,6 @@ if __name__ == '__main__':
     parser.add_argument('src_json', type=str, help='name of the json file. [clean_test.json / clean_train.json / clean_dev.json]')
     parser.add_argument('tgt_data_root_dir', type=str, help='name of the json file. [./../../data/MathQA/MathQAExp1]')
     parser.add_argument('prefix', type=str, help='prefix used to store the generated files [test_exp1 / train_exp1 / dev_exp1]')
+    parser.add_argument('rate_of_corruption', type=int, help='number of incorrect translations per datapoint')
     args = parser.parse_args()
     main(args)
