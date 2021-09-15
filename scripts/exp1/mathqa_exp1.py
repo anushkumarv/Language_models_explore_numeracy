@@ -7,9 +7,8 @@ import json
 from tqdm import tqdm
 import random
 import os
-import re
 
-from scripts.clean_math_qa import get_src_numbers
+from scripts.common import get_src_numbers
 
 with open('operations.txt') as f:
     operations = f.readlines()
@@ -88,10 +87,12 @@ def write_data(src, tgt, args):
     if not os.path.exists(args.tgt_data_root_dir):
         os.mkdir(args.tgt_data_root_dir)
     file_src = os.path.join(args.tgt_data_root_dir, args.prefix + '_' + str(args.rate_of_corruption) +'_src.txt')
+    print(file_src)
     with open(file_src, 'w') as f:
         for line in src:
             f.write("%s\n" % line)
     file_tgt = os.path.join(args.tgt_data_root_dir, args.prefix + '_' + str(args.rate_of_corruption) + '_tgt.txt')
+    print(file_tgt)
     with open(file_tgt, 'w') as f:
         for line in tgt:
             f.write("%s\n" % line)
@@ -108,7 +109,7 @@ def main(args):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='clean up the math qa dataset')
+    parser = argparse.ArgumentParser(description='insert random perturbations for the target symbolic expression')
     parser.add_argument('src_data_root_dir', type=str, help='root directory of src data [./../../data/MathQA/MathQAClean]')
     parser.add_argument('src_json', type=str, help='name of the json file. [clean_test.json / clean_train.json / clean_dev.json]')
     parser.add_argument('tgt_data_root_dir', type=str, help='name of the json file. [./../../data/MathQA/MathQAExp1]')
