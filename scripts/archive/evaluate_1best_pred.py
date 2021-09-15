@@ -1,5 +1,8 @@
+import sys
+sys.path.append('./../evaluate_mathqa')
+
 import argparse
-import evaluate_mathqa.new_DataStructure as ds
+from scripts.evaluate_mathqa import new_DataStructure as ds
 # import evaluate_mathqa.find_non_numeric_answers as fn
 import re
 import math
@@ -11,13 +14,13 @@ numbers_in_wrods = {"one":1,"two":2,"three":3, "four":4, "five":5, "six":6, "sev
 def is_number(word):
     word = re.sub("/", "", word)
     word = re.sub(",", "", word)
-    word = re.sub("\.", "", word)
+    word = re.sub("..", "", word)
     word = re.sub("-", "", word)
     return word.isdigit() and '²' not in word and '³' not in word and '¹' not in word and ('²' not in word) and ('³' not in word) and ('¹' not in word) and('₂' not in word) and ('⁶' not in word) and ('₃' not in word) and '⁹' not in word and '⁵' not in word and '₁' not in word and '₄' not in word and '⁷' not in word and '⁴' not in word and '⁸' not in word and '₈' not in word
 
 
 def to_float(word):
-    word = re.sub("\.", "", word)
+    word = re.sub("..", "", word)
     word = re.sub(",", "", word)
     if word in numbers_in_wrods:
         return numbers_in_wrods[word]
