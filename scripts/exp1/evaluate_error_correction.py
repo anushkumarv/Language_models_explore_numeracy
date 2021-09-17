@@ -1,10 +1,10 @@
 import argparse
 import json
-from common import execute_prediction, parse_options
+from scripts.common import execute_prediction, parse_options
 from tqdm import tqdm
 
 import sys
-sys.path.append('./evaluate_mathqa')
+sys.path.append('../evaluate_mathqa')
 
 src_json = dict()
 
