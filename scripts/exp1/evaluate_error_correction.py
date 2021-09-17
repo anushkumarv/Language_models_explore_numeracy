@@ -41,10 +41,14 @@ def main(args):
     read_src_json(args.src_data_json)
     pbs = read_file(args.src_pb)
     pred = read_file(args.pred)
+    n_bst = args.n_best
     valid = 0
     print('## Evaluating ..')
-    for src, tgt in tqdm(zip(pbs, pred)):
-        valid = valid + 1 if evaluate(src, tgt) else valid
+    for i, src in tqdm(enumerate(pbs)):
+        for tgt in pred[i*n_bst: i*n_bst+n_bst]:
+            valid = valid + 1 if evaluate(src, tgt) else valid
+    # for src, tgt in tqdm(zip(pbs, pred)):
+    #     valid = valid + 1 if evaluate(src, tgt) else valid
     print('## Number correctly predicted ##', valid)
     print('## Number in-correctly predicted ##', len(pbs) - valid)
     print('## Accuracy ##', valid / len(pbs))
@@ -56,5 +60,6 @@ if __name__ == '__main__':
     parser.add_argument('src_data_json', type=str, help='Root directory of src json [./../data/MathQA/MathQAClean/clean_test.json]')
     parser.add_argument('src_pb', type=str, help='Source data contianing problems in format "<PROBLEM> [SEP] <SYMBOLIC INSTRUCTION>"')
     parser.add_argument('pred', type=str, help='Predictions for the source file containing symbolic instructions')
+    parser.add_argument('n_best', type=int, help='Total number of predictions per question')
     args = parser.parse_args()
     main(args)
