@@ -24,12 +24,12 @@ def read_file(file):
 
 def evaluate(src, tgt):
     key = src.split('[SEP]')[0]
-    key = ' '.join(key).strip()
+    key = key.strip()
     res = execute_prediction(key, tgt)
-    options = parse_options(src_json['options'])
+    options = parse_options(src_json[key]['options'])
     options_map = {'a': 0, 'b': 1, 'c': 2, 'd': 3, 'e': 4}
     if res in options:
-        if res == options[options_map[src_json['correct']]]:
+        if res == options[options_map[src_json[key]['correct']]]:
             return 1
         else:
             return 0
