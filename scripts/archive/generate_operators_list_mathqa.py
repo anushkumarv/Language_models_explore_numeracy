@@ -24,4 +24,4 @@ if __name__ == '__main__':
     args = args_parser.parse_args()
     generate_operators(args.ip_filepath, args.op_filename)
 
-# C:\\#Resources\\Injecting_Numeracy\\Language_models_explore_numeracy\\data\\MathQA\\train.json_tgt.txt  C:\\#Resources\\Injecting_Numeracy\\Language_models_explore_numeracy\\data\\MathQA\\operations_list.txt
+# C:\\#Resources\\Injecting_Numeracy\\Language_models_explore_numeracy\\data\\MathQA\\train.json_tgt.txt  C:\\#Resources\\Injecting_Numeracy\\Language_models_explore_numeracy\\data\\MathQA\\operation_list.txt
