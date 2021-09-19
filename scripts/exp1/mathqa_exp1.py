@@ -27,11 +27,12 @@ def read_src_data(file):
     return data_points_lst
 
 
-def process_tgt(tgt_lst, num_in_q):
+def process_tgt(tgt_lst, num_in_q, num_incorrect_tokens):
     # Choose how many change would we like to make
     if len(tgt_lst) > 3:
         # num_chngs = random.randint(1, len(tgt_lst) - 2)
-        num_chngs = random.randint(1, 3)
+        # num_chngs = random.randint(1, 3)
+        num_chngs = num_incorrect_tokens
     else:
         num_chngs = 1
     # Sample the indices from the tgt list where we like to make changes
@@ -59,25 +60,25 @@ def process_tgt(tgt_lst, num_in_q):
     return tgt_lst
 
 
-def process_datapoint(data_point, rate_of_corruption):
+def process_datapoint(data_point, args):
     new_src, new_tgt = list(), list()
-    for _ in range(rate_of_corruption):
+    for _ in range(args.rate_of_corruption):
         src = data_point['Problem']
         tgt = data_point['linear_formula'].replace(')|', ' ').replace('(', ' ').replace(',',' ').\
             replace(')', ' ').strip()
         tgt_lst = tgt.split()
         num_in_q = get_src_numbers(src)
-        temp_tgt = process_tgt(tgt_lst, num_in_q)
+        temp_tgt = process_tgt(tgt_lst, num_in_q, args.num_incorrect_tokens)
         new_src.append(src + ' [SEP] ' + ' '.join(temp_tgt))
         new_tgt.append(tgt)
     return new_src, new_tgt
 
 
-def create_pairs(data_points_lst, rate_of_corruption):
+def create_pairs(data_points_lst, args):
     src = list()
     tgt = list()
     for item in tqdm(data_points_lst):
-        new_src, new_tgt = process_datapoint(item, rate_of_corruption)
+        new_src, new_tgt = process_datapoint(item, args)
         src.extend(new_src)
         tgt.extend(new_tgt)
     return src, tgt
@@ -86,12 +87,14 @@ def create_pairs(data_points_lst, rate_of_corruption):
 def write_data(src, tgt, args):
     if not os.path.exists(args.tgt_data_root_dir):
         os.mkdir(args.tgt_data_root_dir)
-    file_src = os.path.join(args.tgt_data_root_dir, args.prefix + '_' + str(args.rate_of_corruption) +'_src.txt')
+    file_src = os.path.join(args.tgt_data_root_dir, args.prefix + '_' + str(args.rate_of_corruption) + '_' +
+                            str(args.num_incorrect_tokens) +'_src.txt')
     print(file_src)
     with open(file_src, 'w') as f:
         for line in src:
             f.write("%s\n" % line)
-    file_tgt = os.path.join(args.tgt_data_root_dir, args.prefix + '_' + str(args.rate_of_corruption) + '_tgt.txt')
+    file_tgt = os.path.join(args.tgt_data_root_dir, args.prefix + '_' + str(args.rate_of_corruption) + '_' +
+                            str(args.num_incorrect_tokens) + '_tgt.txt')
     print(file_tgt)
     with open(file_tgt, 'w') as f:
         for line in tgt:
@@ -102,7 +105,7 @@ def main(args):
     print('## Reading data ##')
     data_points_lst = read_src_data(os.path.join(args.src_data_root_dir, args.src_json))
     print('## Processing data ##')
-    src, tgt = create_pairs(data_points_lst, args.rate_of_corruption)
+    src, tgt = create_pairs(data_points_lst, args)
     print('## Writing data ##')
     write_data(src, tgt, args)
     print('## Completed')
@@ -115,5 +118,6 @@ if __name__ == '__main__':
     parser.add_argument('tgt_data_root_dir', type=str, help='name of the json file. [./../../data/MathQA/MathQAExp1]')
     parser.add_argument('prefix', type=str, help='prefix used to store the generated files [test_exp1 / train_exp1 / dev_exp1]')
     parser.add_argument('rate_of_corruption', type=int, help='number of incorrect translations per datapoint')
+    parser.add_argument('num_incorrect_tokens', type=int, help='number of incorrect tokens per data points')
     args = parser.parse_args()
     main(args)
