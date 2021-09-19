@@ -46,7 +46,9 @@ def main(args):
     print('## Evaluating ..')
     for i, src in tqdm(enumerate(pbs)):
         for tgt in pred[i*n_bst: i*n_bst+n_bst]:
-            valid = valid + 1 if evaluate(src, tgt) else valid
+            if evaluate(src, tgt):
+                valid = valid + 1
+                break
     # for src, tgt in tqdm(zip(pbs, pred)):
     #     valid = valid + 1 if evaluate(src, tgt) else valid
     print('## Number correctly predicted ##', valid)
