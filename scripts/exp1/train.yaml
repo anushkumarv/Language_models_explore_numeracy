@@ -1,0 +1,41 @@
+# Corpus opts:
+data:
+    corpus_1:
+        path_src: ./../../data/MathQAExp1/train_exp1_1_1_src.txt
+        path_tgt: ./../../data/MathQAExp1/train_exp1_1_1_tgt.txt
+    valid:
+        path_src: ./../../data/MathQAExp1/dev_exp1_1_1_src.txt
+        path_tgt: ./../../data/MathQAExp1/dev_exp1_1_1_tgt.txt
+
+# Vocabulary files that were just created. Make sure the names are same as in preprocess.yaml
+src_vocab: mathqanmt.vocab.src
+tgt_vocab: mathqanmt.vocab.tgt
+
+# Train on a single GPU
+world_size: 1
+gpu_ranks: [0]
+
+# Where to save the checkpoints
+save_model: mathQaExp111TransformerLyrs1Sd3
+save_checkpoint_steps: 2000
+train_steps: 6000
+valid_steps: 500
+#param_init_glorot: True
+learning_rate: 0.001
+optim: adam
+learning_rate_decay: 0.95
+start_decay_steps: 500
+seed: 3
+encoder_type: transformer
+decoder_type: transformer
+position_encoding: true
+enc_layers: 1
+dec_layers: 1
+heads: 8
+rnn_size: 200
+word_vec_size: 200
+transformer_ff: 2048
+dropout_steps: [0]
+dropout: [0.1]
+attention_dropout: [0.1]
+batch_size: 32

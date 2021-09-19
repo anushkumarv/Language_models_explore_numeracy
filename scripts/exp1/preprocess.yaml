@@ -1,0 +1,18 @@
+## Where the samples will be written
+data: mathqanmt
+save_data: mathqanmt
+## Where the vocab(s) will be written
+src_vocab: mathqanmt.vocab.src
+tgt_vocab: mathqanmt.vocab.tgt
+# Prevent overwriting existing files in the folder
+overwrite: False
+
+
+# Corpus opts:
+data:
+    corpus_1:
+        path_src: ./../../data/MathQAExp1/train_exp1_1_1_src.txt
+        path_tgt: ./../../data/MathQAExp1/train_exp1_1_1_tgt.txt
+    valid:
+        path_src: ./../../data/MathQAExp1/dev_exp1_1_1_src.txt
+        path_tgt: ./../../data/MathQAExp1/dev_exp1_1_1_tgt.txt
