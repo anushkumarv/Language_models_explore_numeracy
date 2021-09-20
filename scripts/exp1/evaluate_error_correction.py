@@ -58,7 +58,7 @@ def main(args):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='clean up the math qa dataset')
+    parser = argparse.ArgumentParser(description='Evaluate on the test set')
     parser.add_argument('src_data_json', type=str, help='Root directory of src json [./../data/MathQA/MathQAClean/clean_test.json]')
     parser.add_argument('src_pb', type=str, help='Source data contianing problems in format "<PROBLEM> [SEP] <SYMBOLIC INSTRUCTION>"')
     parser.add_argument('pred', type=str, help='Predictions for the source file containing symbolic instructions')
