@@ -1,15 +1,17 @@
+import sys
+sys.path.append('../evaluate_mathqa')
+
 import argparse
+from multiprocessing import Pool
 import json
 from scripts.common import execute_prediction, parse_options
 from tqdm import tqdm
-
-import sys
-sys.path.append('../evaluate_mathqa')
 
 src_json = dict()
 
 
 def read_src_json(file):
+    global src_json
     with open(file) as f:
         src_data_points_lst = json.load(f)
     for item in src_data_points_lst:
@@ -37,20 +39,28 @@ def evaluate(src, tgt):
         return 0
 
 
+def process_preds(pb_pred_zip):
+    for tgt in pb_pred_zip[1]:
+        if evaluate(pb_pred_zip[0], tgt):
+            return 1
+    return 0
+
+
 def main(args):
-    read_src_json(args.src_data_json)
     pbs = read_file(args.src_pb)
     pred = read_file(args.pred)
     n_bst = args.n_best
-    valid = 0
+    pb_pred_zip = [(pbs[i], pred[i * n_bst: i * n_bst + n_bst]) for i in range(len(pbs))]
     print('## Evaluating ..')
-    for i, src in tqdm(enumerate(pbs)):
-        for tgt in pred[i*n_bst: i*n_bst+n_bst]:
-            if evaluate(src, tgt):
-                valid = valid + 1
-                break
-    # for src, tgt in tqdm(zip(pbs, pred)):
-    #     valid = valid + 1 if evaluate(src, tgt) else valid
+    with Pool(processes=10, initializer=read_src_json, initargs=[args.src_data_json]) as p:
+        ret = p.map(process_preds, pb_pred_zip)
+        valid = sum(ret)
+    # for i, src in tqdm(enumerate(pbs)):
+    #     for tgt in pred[i*n_bst: i*n_bst+n_bst]:
+    #         if evaluate(src, tgt):
+    #             valid = valid + 1
+    #             break
+
     print('## Number correctly predicted ##', valid)
     print('## Number in-correctly predicted ##', len(pbs) - valid)
     print('## Accuracy ##', valid / len(pbs))
