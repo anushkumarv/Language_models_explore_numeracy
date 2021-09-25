@@ -9,6 +9,7 @@ import random
 import os
 
 from scripts.common import get_src_numbers
+from scripts.common import read_src_data
 
 with open('operations.txt') as f:
     operations = f.readlines()
@@ -19,12 +20,6 @@ with open('constants.txt') as f:
     contants = f.readlines()
 # Process to remove new line characters 'add\n' to 'add'
 contants = [item.strip().lower() for item in contants]
-
-
-def read_src_data(file):
-    with open(file) as f:
-        data_points_lst = json.load(f)
-    return data_points_lst
 
 
 def process_tgt(tgt_lst, num_in_q, num_incorrect_tokens):

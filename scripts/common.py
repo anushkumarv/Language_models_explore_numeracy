@@ -4,12 +4,19 @@ sys.path.append('./evaluate_mathqa')
 
 from fractions import Fraction
 import re
+import json
 
 from scripts.evaluate_mathqa  import find_non_numeric_answers as fn
 from scripts.evaluate_mathqa import new_DataStructure as ds
 
 
 numbers_in_wrods = {"one":1,"two":2,"three":3, "four":4, "five":5, "six":6, "seven":7, "eight":8, "nine":9, "ten":10, "hundred":100, "thousand":1000 }
+
+
+def read_src_data(file):
+    with open(file) as f:
+        data_points_lst = json.load(f)
+    return data_points_lst
 
 
 def is_number(word):
