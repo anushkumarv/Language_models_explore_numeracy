@@ -4,15 +4,21 @@ from random import sample
 from random import randint
 from scripts.exp1.mathqa_exp1 import MathQAExp1
 
-with open('operations.txt') as f:
-    operations = f.readlines()
-# Process to remove new line characters 'add\n' to 'add'
-operations = [item.strip() for item in operations]
+operations = list()
+contants = list()
 
-with open('constants.txt') as f:
-    contants = f.readlines()
-# Process to remove new line characters 'add\n' to 'add'
-contants = [item.strip().lower() for item in contants]
+
+def read_contants():
+    global operations, contants
+    with open('./../exp1/operations.txt') as f:
+        operations = f.readlines()
+    # Process to remove new line characters 'add\n' to 'add'
+    operations = [item.strip() for item in operations]
+
+    with open('./../exp1/constants.txt') as f:
+        contants = f.readlines()
+    # Process to remove new line characters 'add\n' to 'add'
+    contants = [item.strip().lower() for item in contants]
 
 
 class MathQAExp2(MathQAExp1):
@@ -69,5 +75,6 @@ if __name__ == '__main__':
     parser.add_argument('rate_of_corruption', type=int, help='number of incorrect translations per datapoint')
     parser.add_argument('num_incorrect_tokens', type=int, help='number of incorrect tokens per data points')
     args = parser.parse_args()
+    read_contants()
     obj = MathQAExp2()
     obj.main(args)
