@@ -22,7 +22,7 @@ with open('constants.txt') as f:
 contants = [item.strip().lower() for item in contants]
 
 
-class MathQAExp(object):
+class MathQAExp1(object):
 
     def process_tgt(self, tgt_lst, num_in_q, num_incorrect_tokens):
         # Choose how many change would we like to make
@@ -116,5 +116,5 @@ if __name__ == '__main__':
     parser.add_argument('rate_of_corruption', type=int, help='number of incorrect translations per datapoint')
     parser.add_argument('num_incorrect_tokens', type=int, help='number of incorrect tokens per data points')
     args = parser.parse_args()
-    obj = MathQAExp()
+    obj = MathQAExp1()
     obj.main(args)
