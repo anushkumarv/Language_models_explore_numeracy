@@ -56,7 +56,6 @@ class MathQAExp1(object):
                 continue
         return tgt_lst
 
-
     def process_datapoint(self, data_point, args):
         new_src, new_tgt = list(), list()
         for _ in range(args.rate_of_corruption):
@@ -70,7 +69,6 @@ class MathQAExp1(object):
             new_tgt.append(tgt)
         return new_src, new_tgt
 
-
     def create_pairs(self, data_points_lst, args):
         src = list()
         tgt = list()
@@ -79,7 +77,6 @@ class MathQAExp1(object):
             src.extend(new_src)
             tgt.extend(new_tgt)
         return src, tgt
-
 
     def write_data(self, src, tgt, args):
         if not os.path.exists(args.tgt_data_root_dir):
