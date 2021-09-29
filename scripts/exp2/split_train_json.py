@@ -9,7 +9,7 @@ from random import sample
 
 def sample_tr_dv_indices(data_points_lst):
     indices = [i for i in range(len(data_points_lst))]
-    tr_indices = sample(indices, int(0.7*len(data_points_lst)))
+    tr_indices = sample(indices, int(0.8*len(data_points_lst)))
     dv_indices = list(set(indices) - set(tr_indices))
     return tr_indices, dv_indices
 
